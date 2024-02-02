@@ -1,15 +1,47 @@
 .headContainer{
-  margin: 4rem auto;
-  padding: 2rem 3rem 3rem;
+  /* margin: 4rem auto; */
+  margin-top : 100px;
+  padding: 30px;
   max-width: 500px;
+  width: 500px;
   background: #ADE3F0;
   color: #fff;
-  /* box-shadow: -20px -20px 0px 0px rgba(100, 100, 100, 0.1); */
+  box-shadow: -20px -20px 0px 0px rgba(100, 100, 100, 0.1);
+  /* border: 1px solid black; */
 }
 .boxContainer{
+  align-items: center;
+  background: #EFFBF8;
   max-width: 500px;
+  width: 500px;
   margin: 0 4rem 4rem 4rem;
-  padding: 2rem 3rem 3rem;
+  padding: 10px 30px;
+  min-height: 400px;
 }
 
+.listItem{
+  border-bottom:1px solid #A4A4A4;
+}
+.radiusBox{
+  width:40px;
+  height: 40px;
+  
+  border-radius: 70%;
+  transition: border-radius 0.3s ease-in-out;
+  
+}
+.radiusBox:hover {
+  border-radius: 500%;
+  background-color: #ADE3F0;
+}
 
+.modifyItem {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 400px;
+  background-color: white;  /* Material-UI 테마 컬러 사용 */
+  border: 2px solid #000;
+  padding: 16px;
+}
