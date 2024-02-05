@@ -1,41 +1,26 @@
 import React, { useState, useEffect } from 'react';
 import './App.css';
-import { Box, TextField, Button, List, ListItem, ListItemText, Stack, ListItemButton, Modal, Typography, Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions } from '@mui/material';
+import { Box, TextField, Button, List, ListItem, ListItemText, Stack, ListItemButton, Dialog, DialogContent, DialogActions } from '@mui/material';
 import CreateIcon from '@mui/icons-material/Create';
-import RemoveCircleOutlineIcon from '@mui/icons-material/RemoveCircleOutline';
-import BorderColorIcon from '@mui/icons-material/BorderColor';
+
 
 
 function TodoList() {
- 
-  const test = useState('테스트입니다');
 
   const [creates, setCreate] = useState([]); // 입력된 자료
-  const [tmpCreates, setTmpCreate] = useState([]); // 입력된 자료의 복사본
-  const [modifiedValue, setModifiedValue] = useState('');
-  
   const [inputtext, setInputtext] = useState('');
   const [curState, setCurState] = useState('');
   const [switched, setSwitched]  = useState(false);
 
-  const setState = () => {
-    if (switched === false) {
-      setSwitched(true);
-
-    } else {
-      setSwitched(false);
-    }
-  }
-
   function createBtn(){
-    if(inputtext === ''){
+    if(!(inputtext.trim().length !== 0)){
       return alert('글자를 입력해주세요');
     }
+    
     let tmpCreate = [...creates];
     tmpCreate.push(inputtext);
     setCreate(tmpCreate);
     setInputtext(''); // 입력 후 글자 공백처리
-    // console.log(creates)
   }
 
   const enterCreateBtn = (e) => {
@@ -45,7 +30,6 @@ function TodoList() {
   };
 
   const deleteItem = (e, idx)=>{
-    console.log("idx",idx)
     creates.splice(idx, 1);
     setCreate([...creates]);
   }
@@ -89,8 +73,8 @@ function TodoList() {
                 {
                 creates.map((name, idx)=>{ return (
                 <ListItem disablePadding>
-                  <ListItemButton>
-                    <ListItemText className='listItem' primary={creates[idx]} onClick={(e) => deleteItem(e, idx)}/>
+                  <ListItemButton onClick={(e) => deleteItem(e, idx)}>
+                    <ListItemText className='listItem' primary={creates[idx]} />
                   </ListItemButton>
                   <Box onClick={() => {setSwitched(true); setCurState(idx); }}  >
                     <Button>수정</Button>
@@ -105,9 +89,9 @@ function TodoList() {
                       switched={switched}
                       setSwitched={setSwitched}
                       creates={creates[curState]} 
-                      setModifiedValue={(modifiedValue) => {
+                      setModified={(e) => {
                         // 여기서 수정된 값을 사용할 수 있음
-                        creates[curState] = modifiedValue;
+                        creates[curState] = e;
                         setCreate([...creates]);
                       }}
                   /> 
@@ -122,28 +106,21 @@ function TodoList() {
 }
 
 function ModifyBox(props){
-  const [open, setOpen] = useState(false);
   const [modifiedValue, setModifiedValue] = useState('');
-  const handleClickOpen = () => {
-    setOpen(true);
-  };
-
+  
   const handleClose = () => {
-    setOpen(false);
     props.setSwitched(false);
   };
 
   const mdf = (e)=>{
-    console.log(e);
     setModifiedValue(e);
   }
-  useEffect(()=>{
-    console.log("open: " + open);
-  })
 
-  console.log(`props`);
-  console.log(props);
-  console.log(props.switched);
+  useEffect(() => {
+    // 모달이 열릴 때마다 modifiedValue를 초기화
+    setModifiedValue(props.creates); 
+  }, []);
+
   return (
     
       <Dialog
@@ -153,12 +130,8 @@ function ModifyBox(props){
           component: 'form',
           onSubmit: (event) => {
             event.preventDefault();
-            const formData = new FormData(event.currentTarget);
-            const formJson = Object.fromEntries(formData.entries());
-            const email = formJson.email;
-            console.log(email);
             handleClose();
-            props.setModifiedValue(modifiedValue);
+            props.setModified(modifiedValue);
           },
         }}
       >
@@ -175,8 +148,8 @@ function ModifyBox(props){
           />
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleClose}>Cancel</Button>
-          <Button type="submit">Subscribe</Button>
+          <Button onClick={handleClose}>취소</Button>
+          <Button type="submit" onClick={() => props.setModified(modifiedValue || props.creates)}>수정</Button>
         </DialogActions>
       </Dialog>
   )
